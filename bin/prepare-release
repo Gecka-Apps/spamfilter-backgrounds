@@ -1,0 +1,169 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/*
+ * Build side of a release, run by bin/release: rebuilds every table from the
+ * sources on disk, writes the facts and the manifest, checks that the
+ * manifest describes exactly the tables in dist/, packs the Tatoeba exports
+ * the tables were built from, and leaves the release notes and the list of
+ * assets in dist/ for bin/release to tag, push and publish.
+ *
+ *   bin/prepare-release v1.3 [--no-build]
+ *
+ * The tag is v<feature hash version>.<n>; a tag for another hash version
+ * than the filter's is refused, as are uncommitted changes here or in the
+ * filter, since the manifest names both commits. --no-build keeps the
+ * tables in dist/ and only redoes the facts, the manifest and what follows.
+ */
+
+use Gecka\SpamFilter\Tokenizer\FeatureHasher;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$arguments = array_slice($argv, 1);
+$tag = null;
+$noBuild = in_array('--no-build', $arguments, true);
+foreach ($arguments as $argument) {
+    if (! str_starts_with($argument, '--')) {
+        $tag = $argument;
+    } elseif ($argument !== '--no-build') {
+        fwrite(STDERR, "Unknown option $argument\n");
+        exit(2);
+    }
+}
+if ($tag === null) {
+    fwrite(STDERR, "Usage: bin/prepare-release v<hash-version>.<n> [--no-build]\n");
+    exit(2);
+}
+
+$fail = static function (string $message): never {
+    fwrite(STDERR, "release: $message\n");
+    exit(1);
+};
+
+$git = static function (string $directory, string $arguments): string {
+    return trim((string) shell_exec(sprintf('git -C %s %s 2>/dev/null', escapeshellarg($directory), $arguments)));
+};
+
+$run = static function (string $command, string $what) use ($root): void {
+    echo "\n== $what\n";
+    passthru(sprintf('cd %s && %s', escapeshellarg($root), $command), $status);
+    if ($status !== 0) {
+        fwrite(STDERR, "release: $what failed (exit $status)\n");
+        exit(1);
+    }
+};
+
+// The tag names the feature hash version the tables are built for
+if (preg_match('/^v(\d+)\.(\d+)$/', $tag, $m) !== 1) {
+    $fail("the tag must look like v<hash-version>.<n>, such as v" . FeatureHasher::VERSION . ".0");
+}
+if ((int) $m[1] !== FeatureHasher::VERSION) {
+    $fail(sprintf('the tag names hash version %d, the filter installed here is at version %d', (int) $m[1], FeatureHasher::VERSION));
+}
+
+$library = realpath("$root/vendor/gecka/spamfilter");
+if ($library === false) {
+    $fail('the filter is not installed, run composer install');
+}
+foreach ([$root => 'this repository', $library => 'the filter'] as $directory => $what) {
+    if ($git($directory, 'rev-parse HEAD') === '') {
+        $fail("$what is not a git checkout");
+    }
+    if ($git($directory, 'status --porcelain') !== '') {
+        $fail("$what has uncommitted changes");
+    }
+}
+if ($git($root, 'tag -l ' . escapeshellarg($tag)) !== '') {
+    $fail("the tag $tag exists locally");
+}
+
+if (! $noBuild) {
+    $run('bin/build all --force', 'build');
+}
+$run('bin/facts', 'facts');
+$run('bin/manifest --version=' . escapeshellarg($tag), 'manifest');
+
+// The manifest must describe exactly the tables in dist/
+echo "\n== check\n";
+/** @var array{hash_version: int, version: ?string, built_from: array{spamfilter-backgrounds: ?string, spamfilter: ?string}, languages: array<string, array{file: string, bytes: int, sha256: string, inputs: array<string, string>}>} $manifest */
+$manifest = json_decode((string) file_get_contents("$root/dist/manifest.json"), true);
+if ($manifest['hash_version'] !== FeatureHasher::VERSION || $manifest['version'] !== $tag) {
+    $fail('the manifest does not name this hash version and tag');
+}
+$tables = array_map('basename', glob("$root/dist/*.bin") ?: []);
+$listed = array_column($manifest['languages'], 'file');
+sort($tables);
+sort($listed);
+if ($tables === [] || $tables !== $listed) {
+    $fail('the manifest and dist/ do not list the same tables');
+}
+foreach ($manifest['languages'] as $code => $entry) {
+    $file = "$root/dist/{$entry['file']}";
+    if (filesize($file) !== $entry['bytes'] || hash_file('sha256', $file) !== $entry['sha256']) {
+        $fail("$code: the table does not match the manifest");
+    }
+}
+if ($manifest['built_from']['spamfilter-backgrounds'] !== $git($root, 'rev-parse HEAD') || $manifest['built_from']['spamfilter'] !== $git($library, 'rev-parse HEAD')) {
+    $fail('the manifest names other commits than the ones checked out');
+}
+printf("%d tables match the manifest\n", count($tables));
+
+// The Tatoeba exports change weekly and keep no history, so the ones the
+// tables were built from are published with them, checked against the
+// SHA-256 the facts recorded
+/** @var array<string, array{iso3: string}> $catalogue */
+$catalogue = json_decode((string) file_get_contents("$root/catalogue.json"), true);
+$exports = [];
+foreach ($manifest['languages'] as $code => $entry) {
+    if (! isset($entry['inputs']['tatoeba'])) {
+        continue;
+    }
+    $export = "sources/tatoeba/{$catalogue[$code]['iso3']}_sentences.tsv";
+    if (! is_file("$root/$export") || hash_file('sha256', "$root/$export") !== $entry['inputs']['tatoeba']) {
+        $fail("$code: $export is missing or is not the export the table was built from");
+    }
+    $exports[$export] = true;
+}
+$archive = "$root/dist/tatoeba-sources.tar.xz";
+@unlink($archive);
+if ($exports !== []) {
+    $run(
+        'XZ_OPT=-T0 tar -cJf ' . escapeshellarg($archive) . ' ' . implode(' ', array_map('escapeshellarg', array_keys($exports))),
+        sprintf('archive of %d Tatoeba exports', count($exports)),
+    );
+}
+
+$registers = ['tatoeba' => 0, 'opensubtitles' => 0];
+foreach ($manifest['languages'] as $entry) {
+    foreach (array_keys($registers) as $register) {
+        if (isset($entry['inputs'][$register])) {
+            $registers[$register]++;
+        }
+    }
+}
+$notes = sprintf(
+    "%d background tables for gecka/spamfilter, feature hash version %d: one per language, built from the Leipzig Corpora Collection and FrequencyWords, with Tatoeba sentences for %d languages and OpenSubtitles sentences for %d more.\n\n"
+    . "Built from spamfilter-backgrounds %s with gecka/spamfilter %s. `manifest.json` lists the SHA-256 of every table and of every input file%s.\n",
+    count($tables),
+    FeatureHasher::VERSION,
+    $registers['tatoeba'],
+    $registers['opensubtitles'],
+    $manifest['built_from']['spamfilter-backgrounds'],
+    $manifest['built_from']['spamfilter'],
+    $exports === [] ? '' : sprintf('; `tatoeba-sources.tar.xz` holds the %d Tatoeba exports the tables were built from', count($exports)),
+);
+file_put_contents("$root/dist/release-notes.md", $notes);
+
+$assets = array_merge(
+    array_map(static fn(string $table): string => "dist/$table", $tables),
+    ['dist/manifest.json'],
+    $exports === [] ? [] : ['dist/tatoeba-sources.tar.xz'],
+);
+file_put_contents("$root/dist/release-assets.txt", implode("\n", $assets) . "\n");
+printf("\n%d assets for release %s:\n%s", count($assets), $tag, $notes);

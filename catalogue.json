@@ -1,0 +1,1538 @@
+{
+    "aa": {
+        "name": "Afar",
+        "iso3": "aar",
+        "leipzig": "aar_community_2017",
+        "frequencywords": null
+    },
+    "ace": {
+        "name": "Achinese",
+        "iso3": "ace",
+        "leipzig": "ace_community_2017",
+        "frequencywords": null
+    },
+    "ach": {
+        "name": "Acoli",
+        "iso3": "ach",
+        "leipzig": "ach_community_2017",
+        "frequencywords": null
+    },
+    "af": {
+        "name": "Afrikaans",
+        "iso3": "afr",
+        "leipzig": "afr_news_2017_300K",
+        "frequencywords": "af"
+    },
+    "ak": {
+        "name": "Akan",
+        "iso3": "aka",
+        "leipzig": "aka_wikipedia_2018",
+        "frequencywords": null
+    },
+    "am": {
+        "name": "Amharic",
+        "iso3": "amh",
+        "leipzig": "amh_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "an": {
+        "name": "Aragonese",
+        "iso3": "arg",
+        "leipzig": "arg_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "anw": {
+        "name": "Anaang",
+        "iso3": "anw",
+        "leipzig": "anw_community_2017",
+        "frequencywords": null
+    },
+    "ar": {
+        "name": "Arabic",
+        "iso3": "ara",
+        "leipzig": "ara_news_2022_300K",
+        "frequencywords": "ar"
+    },
+    "arz": {
+        "name": "Egyptian Arabic",
+        "iso3": "arz",
+        "leipzig": "arz_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "as": {
+        "name": "Assamese",
+        "iso3": "asm",
+        "leipzig": "asm_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "ast": {
+        "name": "Asturian",
+        "iso3": "ast",
+        "leipzig": "ast_wikipedia_2021_300K",
+        "frequencywords": null
+    },
+    "ay": {
+        "name": "Aymara",
+        "iso3": "aym",
+        "leipzig": "aym_community_2017",
+        "frequencywords": null
+    },
+    "az": {
+        "name": "Azerbaijani",
+        "iso3": "aze",
+        "leipzig": "aze_newscrawl_2013_300K",
+        "frequencywords": null
+    },
+    "ba": {
+        "name": "Bashkir",
+        "iso3": "bak",
+        "leipzig": "bak_news_2016_300K",
+        "frequencywords": null
+    },
+    "ban": {
+        "name": "Balinese",
+        "iso3": "ban",
+        "leipzig": "ban-id_web_2013_30K",
+        "frequencywords": null
+    },
+    "bar": {
+        "name": "Bavarian",
+        "iso3": "bar",
+        "leipzig": "bar_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "bcl": {
+        "name": "Central Bikol",
+        "iso3": "bcl",
+        "leipzig": "bcl_wikipedia_2014_10K",
+        "frequencywords": null
+    },
+    "be": {
+        "name": "Belarusian",
+        "iso3": "bel",
+        "leipzig": "bel_news_2011_300K",
+        "frequencywords": null
+    },
+    "bem": {
+        "name": "Bemba (Zambia)",
+        "iso3": "bem",
+        "leipzig": "bem_community_2017",
+        "frequencywords": null
+    },
+    "bew": {
+        "name": "Betawi",
+        "iso3": "bew",
+        "leipzig": "bew_community_2017",
+        "frequencywords": null
+    },
+    "bg": {
+        "name": "Bulgarian",
+        "iso3": "bul",
+        "leipzig": "bul_news_2022_300K",
+        "frequencywords": "bg"
+    },
+    "bih": {
+        "name": "Bihari",
+        "iso3": "bih",
+        "leipzig": "bih_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "bik": {
+        "name": "Bikol",
+        "iso3": "bik",
+        "leipzig": "bik_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "bjn": {
+        "name": "Banjar",
+        "iso3": "bjn",
+        "leipzig": "bjn_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "bm": {
+        "name": "Bambara",
+        "iso3": "bam",
+        "leipzig": "bam_community_2021",
+        "frequencywords": null
+    },
+    "bn": {
+        "name": "Bengali",
+        "iso3": "ben",
+        "leipzig": "ben_news_2020_300K",
+        "frequencywords": "bn"
+    },
+    "bo": {
+        "name": "Tibetan",
+        "iso3": "bod",
+        "leipzig": "bod_community_2017",
+        "frequencywords": null
+    },
+    "bpy": {
+        "name": "Bishnupriya",
+        "iso3": "bpy",
+        "leipzig": "bpy_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "br": {
+        "name": "Breton",
+        "iso3": "bre",
+        "leipzig": "bre_wikipedia_2021_100K",
+        "frequencywords": "br"
+    },
+    "bs": {
+        "name": "Bosnian",
+        "iso3": "bos",
+        "leipzig": "bos_news_2020_300K",
+        "frequencywords": "bs"
+    },
+    "bua": {
+        "name": "Buriat",
+        "iso3": "bua",
+        "leipzig": "bua_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "bug": {
+        "name": "Buginese",
+        "iso3": "bug",
+        "leipzig": "bug_community_2017",
+        "frequencywords": null
+    },
+    "ca": {
+        "name": "Catalan",
+        "iso3": "cat",
+        "leipzig": "cat_news_2022_300K",
+        "frequencywords": "ca"
+    },
+    "cdo": {
+        "name": "Min Dong Chinese",
+        "iso3": "cdo",
+        "leipzig": "cdo_community_2017",
+        "frequencywords": null
+    },
+    "ce": {
+        "name": "Chechen",
+        "iso3": "che",
+        "leipzig": "che_wikipedia_2016_100K",
+        "frequencywords": null
+    },
+    "ceb": {
+        "name": "Cebuano",
+        "iso3": "ceb",
+        "leipzig": "ceb_wikipedia_2021_300K",
+        "frequencywords": null
+    },
+    "co": {
+        "name": "Corsican",
+        "iso3": "cos",
+        "leipzig": "cos_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "cs": {
+        "name": "Czech",
+        "iso3": "ces",
+        "leipzig": "ces_news_2024_300K",
+        "frequencywords": "cs"
+    },
+    "csb": {
+        "name": "Kashubian",
+        "iso3": "csb",
+        "leipzig": "csb_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "cv": {
+        "name": "Chuvash",
+        "iso3": "chv",
+        "leipzig": "chv_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "cy": {
+        "name": "Welsh",
+        "iso3": "cym",
+        "leipzig": "cym_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "da": {
+        "name": "Danish",
+        "iso3": "dan",
+        "leipzig": "dan_news_2022_300K",
+        "frequencywords": "da"
+    },
+    "de": {
+        "name": "German",
+        "iso3": "deu",
+        "leipzig": "deu_news_2025_300K",
+        "frequencywords": "de"
+    },
+    "diq": {
+        "name": "Dimli",
+        "iso3": "diq",
+        "leipzig": "diq_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "dsb": {
+        "name": "Lower Sorbian",
+        "iso3": "dsb",
+        "leipzig": "dsb_wikipedia_2016_10K",
+        "frequencywords": null
+    },
+    "dv": {
+        "name": "Dhivehi",
+        "iso3": "div",
+        "leipzig": "div_newscrawl_2015_300K",
+        "frequencywords": null
+    },
+    "dyu": {
+        "name": "Dyula",
+        "iso3": "dyu",
+        "leipzig": "dyu_community_2017",
+        "frequencywords": null
+    },
+    "ee": {
+        "name": "Ewe",
+        "iso3": "ewe",
+        "leipzig": "ewe_community_2017",
+        "frequencywords": null
+    },
+    "el": {
+        "name": "Modern Greek",
+        "iso3": "ell",
+        "leipzig": "ell_news_2024_300K",
+        "frequencywords": "el"
+    },
+    "emk": {
+        "name": "Eastern Maninkakan",
+        "iso3": "emk",
+        "leipzig": "emk_community_2017",
+        "frequencywords": null
+    },
+    "eml": {
+        "name": "Emiliano-Romagnolo",
+        "iso3": "eml",
+        "leipzig": "eml_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "en": {
+        "name": "English",
+        "iso3": "eng",
+        "leipzig": "eng_news_2025_300K",
+        "frequencywords": "en"
+    },
+    "eo": {
+        "name": "Esperanto",
+        "iso3": "epo",
+        "leipzig": "epo_newscrawl_2017_300K",
+        "frequencywords": "eo"
+    },
+    "es": {
+        "name": "Spanish",
+        "iso3": "spa",
+        "leipzig": "spa_news_2024_300K",
+        "frequencywords": "es"
+    },
+    "et": {
+        "name": "Standard Estonian",
+        "iso3": "ekk",
+        "leipzig": "ekk_wikipedia_2021_300K",
+        "frequencywords": "et"
+    },
+    "eu": {
+        "name": "Basque",
+        "iso3": "eus",
+        "leipzig": "eus_newscrawl_2012_300K",
+        "frequencywords": "eu"
+    },
+    "ext": {
+        "name": "Extremaduran",
+        "iso3": "ext",
+        "leipzig": "ext_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "fa": {
+        "name": "Persian",
+        "iso3": "fas",
+        "leipzig": "fas_news_2024_300K",
+        "frequencywords": "fa"
+    },
+    "ff": {
+        "name": "Fulah",
+        "iso3": "ful",
+        "leipzig": "ful_community_2017",
+        "frequencywords": null
+    },
+    "fi": {
+        "name": "Finnish",
+        "iso3": "fin",
+        "leipzig": "fin_news_2022_300K",
+        "frequencywords": "fi"
+    },
+    "fo": {
+        "name": "Faroese",
+        "iso3": "fao",
+        "leipzig": "fao-fo_web_2015_300K",
+        "frequencywords": null
+    },
+    "fon": {
+        "name": "Fon",
+        "iso3": "fon",
+        "leipzig": "fon_community_2017",
+        "frequencywords": null
+    },
+    "fr": {
+        "name": "French",
+        "iso3": "fra",
+        "leipzig": "fra_news_2024_300K",
+        "frequencywords": "fr"
+    },
+    "frr": {
+        "name": "Northern Frisian",
+        "iso3": "frr",
+        "leipzig": "frr_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "fuc": {
+        "name": "Pulaar",
+        "iso3": "fuc",
+        "leipzig": "fuc_community_2017",
+        "frequencywords": null
+    },
+    "fy": {
+        "name": "Western Frisian",
+        "iso3": "fry",
+        "leipzig": "fry_news_2020_100K",
+        "frequencywords": null
+    },
+    "ga": {
+        "name": "Irish",
+        "iso3": "gle",
+        "leipzig": "gle_newscrawl_2014_300K",
+        "frequencywords": null
+    },
+    "gan": {
+        "name": "Gan Chinese",
+        "iso3": "gan",
+        "leipzig": "gan_community_2017",
+        "frequencywords": null
+    },
+    "gl": {
+        "name": "Galician",
+        "iso3": "glg",
+        "leipzig": "glg_wikipedia_2021_300K",
+        "frequencywords": "gl"
+    },
+    "glk": {
+        "name": "Gilaki",
+        "iso3": "glk",
+        "leipzig": "glk_wikipedia_2016_10K",
+        "frequencywords": null
+    },
+    "gn": {
+        "name": "Guarani",
+        "iso3": "grn",
+        "leipzig": "grn_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "gom": {
+        "name": "Goan Konkani",
+        "iso3": "gom",
+        "leipzig": "gom_newscrawl_2011_30K",
+        "frequencywords": null
+    },
+    "gsw": {
+        "name": "Swiss German",
+        "iso3": "gsw",
+        "leipzig": "gsw_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "gu": {
+        "name": "Gujarati",
+        "iso3": "guj",
+        "leipzig": "guj_newscrawl_2016_300K",
+        "frequencywords": null
+    },
+    "gv": {
+        "name": "Manx",
+        "iso3": "glv",
+        "leipzig": "glv_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "ha": {
+        "name": "Hausa",
+        "iso3": "hau",
+        "leipzig": "hau_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "he": {
+        "name": "Hebrew",
+        "iso3": "heb",
+        "leipzig": "heb_news_2020_300K",
+        "frequencywords": "he"
+    },
+    "hi": {
+        "name": "Hindi",
+        "iso3": "hin",
+        "leipzig": "hin_news_2022_300K",
+        "frequencywords": "hi"
+    },
+    "hif": {
+        "name": "Fiji Hindi",
+        "iso3": "hif",
+        "leipzig": "hif_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "hil": {
+        "name": "Hiligaynon",
+        "iso3": "hil",
+        "leipzig": "hil_community_2017",
+        "frequencywords": null
+    },
+    "hr": {
+        "name": "Croatian",
+        "iso3": "hrv",
+        "leipzig": "hrv_news_2020_300K",
+        "frequencywords": "hr"
+    },
+    "hsb": {
+        "name": "Upper Sorbian",
+        "iso3": "hsb",
+        "leipzig": "hsb_wikipedia_2016_30K",
+        "frequencywords": null
+    },
+    "ht": {
+        "name": "Haitian",
+        "iso3": "hat",
+        "leipzig": "hat_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "hu": {
+        "name": "Hungarian",
+        "iso3": "hun",
+        "leipzig": "hun_news_2024_300K",
+        "frequencywords": "hu"
+    },
+    "hy": {
+        "name": "Armenian",
+        "iso3": "hye",
+        "leipzig": "hye_wikipedia_2021_300K",
+        "frequencywords": "hy"
+    },
+    "ia": {
+        "name": "Interlingua",
+        "iso3": "ina",
+        "leipzig": "ina_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "ibb": {
+        "name": "Ibibio",
+        "iso3": "ibb",
+        "leipzig": "ibb_community_2017",
+        "frequencywords": null
+    },
+    "id": {
+        "name": "Indonesian",
+        "iso3": "ind",
+        "leipzig": "ind_news_2024_300K",
+        "frequencywords": "id"
+    },
+    "ie": {
+        "name": "Interlingue",
+        "iso3": "ile",
+        "leipzig": "ile_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "ig": {
+        "name": "Igbo",
+        "iso3": "ibo",
+        "leipzig": "ibo_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "ilo": {
+        "name": "Iloko",
+        "iso3": "ilo",
+        "leipzig": "ilo_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "io": {
+        "name": "Ido",
+        "iso3": "ido",
+        "leipzig": "ido_wikipedia_2016_100K",
+        "frequencywords": null
+    },
+    "is": {
+        "name": "Icelandic",
+        "iso3": "isl",
+        "leipzig": "isl_newscrawl_2019_300K",
+        "frequencywords": "is"
+    },
+    "it": {
+        "name": "Italian",
+        "iso3": "ita",
+        "leipzig": "ita_news_2024_300K",
+        "frequencywords": "it"
+    },
+    "ja": {
+        "name": "Japanese",
+        "iso3": "jpn",
+        "leipzig": "jpn_news_2011_300K",
+        "frequencywords": "ja"
+    },
+    "jv": {
+        "name": "Javanese",
+        "iso3": "jav",
+        "leipzig": "jav_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "ka": {
+        "name": "Georgian",
+        "iso3": "kat",
+        "leipzig": "kat_newscrawl_2016_300K",
+        "frequencywords": "ka"
+    },
+    "kab": {
+        "name": "Kabyle",
+        "iso3": "kab",
+        "leipzig": "kab_community_2017",
+        "frequencywords": null
+    },
+    "kbd": {
+        "name": "Kabardian",
+        "iso3": "kbd",
+        "leipzig": "kbd_community_2017",
+        "frequencywords": null
+    },
+    "kde": {
+        "name": "Makonde",
+        "iso3": "kde",
+        "leipzig": "kde_community_2017",
+        "frequencywords": null
+    },
+    "kea": {
+        "name": "Kabuverdianu",
+        "iso3": "kea",
+        "leipzig": "kea_community_2017",
+        "frequencywords": null
+    },
+    "kg": {
+        "name": "Kongo",
+        "iso3": "kon",
+        "leipzig": "kon_community_2017",
+        "frequencywords": null
+    },
+    "ki": {
+        "name": "Kikuyu",
+        "iso3": "kik",
+        "leipzig": "kik_community_2017",
+        "frequencywords": null
+    },
+    "kk": {
+        "name": "Kazakh",
+        "iso3": "kaz",
+        "leipzig": "kaz_newscrawl_2016_300K",
+        "frequencywords": "kk"
+    },
+    "kl": {
+        "name": "Kalaallisut",
+        "iso3": "kal",
+        "leipzig": "kal_newscrawl_2011_30K",
+        "frequencywords": null
+    },
+    "km": {
+        "name": "Khmer",
+        "iso3": "khm",
+        "leipzig": "khm_community_2017",
+        "frequencywords": null
+    },
+    "kn": {
+        "name": "Kannada",
+        "iso3": "kan",
+        "leipzig": "kan_wikipedia_2021_300K",
+        "frequencywords": null
+    },
+    "kng": {
+        "name": "Koongo",
+        "iso3": "kng",
+        "leipzig": "kng_community_2017",
+        "frequencywords": null
+    },
+    "knn": {
+        "name": "Konkani",
+        "iso3": "knn",
+        "leipzig": "knn-in_web_2015_10K",
+        "frequencywords": null
+    },
+    "ko": {
+        "name": "Korean",
+        "iso3": "kor",
+        "leipzig": "kor_news_2022_300K",
+        "frequencywords": "ko"
+    },
+    "koi": {
+        "name": "Komi-Permyak",
+        "iso3": "koi",
+        "leipzig": "koi_wikipedia_2016_10K",
+        "frequencywords": null
+    },
+    "krc": {
+        "name": "Karachay-Balkar",
+        "iso3": "krc",
+        "leipzig": "krc_wikipedia_2016_10K",
+        "frequencywords": null
+    },
+    "ks": {
+        "name": "Kashmiri",
+        "iso3": "kas",
+        "leipzig": "kas_community_2017",
+        "frequencywords": null
+    },
+    "ksh": {
+        "name": "Kölsch",
+        "iso3": "ksh",
+        "leipzig": "ksh_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "ku": {
+        "name": "Central Kurdish",
+        "iso3": "ckb",
+        "leipzig": "ckb_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "kv": {
+        "name": "Komi",
+        "iso3": "kom",
+        "leipzig": "kom_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "ky": {
+        "name": "Kirghiz",
+        "iso3": "kir",
+        "leipzig": "kir_newscrawl_2016_300K",
+        "frequencywords": null
+    },
+    "la": {
+        "name": "Latin",
+        "iso3": "lat",
+        "leipzig": "lat_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "lad": {
+        "name": "Ladino",
+        "iso3": "lad",
+        "leipzig": "lad_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "lb": {
+        "name": "Luxembourgish",
+        "iso3": "ltz",
+        "leipzig": "ltz_newscrawl_2016_300K",
+        "frequencywords": null
+    },
+    "lg": {
+        "name": "Ganda",
+        "iso3": "lug",
+        "leipzig": "lug_newscrawl_2016_300K",
+        "frequencywords": null
+    },
+    "lgg": {
+        "name": "Lugbara",
+        "iso3": "lgg",
+        "leipzig": "lgg_community_2017",
+        "frequencywords": null
+    },
+    "li": {
+        "name": "Limburgan",
+        "iso3": "lim",
+        "leipzig": "lim-nl_web_2015_300K",
+        "frequencywords": null
+    },
+    "lmo": {
+        "name": "Lombard",
+        "iso3": "lmo",
+        "leipzig": "lmo_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "ln": {
+        "name": "Lingala",
+        "iso3": "lin",
+        "leipzig": "lin_community_2017",
+        "frequencywords": null
+    },
+    "lo": {
+        "name": "Lao",
+        "iso3": "lao",
+        "leipzig": "lao_community_2021",
+        "frequencywords": null
+    },
+    "lt": {
+        "name": "Lithuanian",
+        "iso3": "lit",
+        "leipzig": "lit_news_2020_300K",
+        "frequencywords": "lt"
+    },
+    "lup": {
+        "name": "Lumbu",
+        "iso3": "lup",
+        "leipzig": "lup_community_2017",
+        "frequencywords": null
+    },
+    "lus": {
+        "name": "Lushai",
+        "iso3": "lus",
+        "leipzig": "lus_news_2020_30K",
+        "frequencywords": null
+    },
+    "lv": {
+        "name": "Latvian",
+        "iso3": "lav",
+        "leipzig": "lav_news_2020_300K",
+        "frequencywords": "lv"
+    },
+    "mad": {
+        "name": "Madurese",
+        "iso3": "mad",
+        "leipzig": "mad-id_web_2013_10K",
+        "frequencywords": null
+    },
+    "mai": {
+        "name": "Maithili",
+        "iso3": "mai",
+        "leipzig": "mai_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "mg": {
+        "name": "Malagasy",
+        "iso3": "mlg",
+        "leipzig": "mlg_wikipedia_2014_30K",
+        "frequencywords": null
+    },
+    "mhr": {
+        "name": "Eastern Mari",
+        "iso3": "mhr",
+        "leipzig": "mhr_wikipedia_2016_30K",
+        "frequencywords": null
+    },
+    "mi": {
+        "name": "Maori",
+        "iso3": "mri",
+        "leipzig": "mri-nz_web_2017_100K",
+        "frequencywords": null
+    },
+    "min": {
+        "name": "Minangkabau",
+        "iso3": "min",
+        "leipzig": "min_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "mk": {
+        "name": "Macedonian",
+        "iso3": "mkd",
+        "leipzig": "mkd_newscrawl_2011_300K",
+        "frequencywords": "mk"
+    },
+    "mkw": {
+        "name": "Kituba (Congo)",
+        "iso3": "mkw",
+        "leipzig": "mkw_community_2017",
+        "frequencywords": null
+    },
+    "ml": {
+        "name": "Malayalam",
+        "iso3": "mal",
+        "leipzig": "mal_wikipedia_2021_300K",
+        "frequencywords": "ml"
+    },
+    "mn": {
+        "name": "Halh Mongolian",
+        "iso3": "khk",
+        "leipzig": "khk_community_2017",
+        "frequencywords": null
+    },
+    "mos": {
+        "name": "Mossi",
+        "iso3": "mos",
+        "leipzig": "mos_community_2017",
+        "frequencywords": null
+    },
+    "mr": {
+        "name": "Marathi",
+        "iso3": "mar",
+        "leipzig": "mar_news_2020_300K",
+        "frequencywords": null
+    },
+    "mrj": {
+        "name": "Western Mari",
+        "iso3": "mrj",
+        "leipzig": "mrj_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "ms": {
+        "name": "Malay",
+        "iso3": "msa",
+        "leipzig": "msa_newscrawl_2016_300K",
+        "frequencywords": "ms"
+    },
+    "mt": {
+        "name": "Maltese",
+        "iso3": "mlt",
+        "leipzig": "mlt_web_2012_300K",
+        "frequencywords": null
+    },
+    "mwl": {
+        "name": "Mirandese",
+        "iso3": "mwl",
+        "leipzig": "mwl_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "my": {
+        "name": "Burmese",
+        "iso3": "mya",
+        "leipzig": "mya_community_2022",
+        "frequencywords": null
+    },
+    "myv": {
+        "name": "Erzya",
+        "iso3": "myv",
+        "leipzig": "myv_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "mzn": {
+        "name": "Mazanderani",
+        "iso3": "mzn",
+        "leipzig": "mzn_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "nan": {
+        "name": "Min Nan Chinese",
+        "iso3": "nan",
+        "leipzig": "nan_wikipedia_2016_100K",
+        "frequencywords": null
+    },
+    "nap": {
+        "name": "Neapolitan",
+        "iso3": "nap",
+        "leipzig": "nap-tara_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "nb": {
+        "name": "Norwegian Bokmål",
+        "iso3": "nob",
+        "leipzig": "nob_news_2013_300K",
+        "frequencywords": "no"
+    },
+    "nds": {
+        "name": "Low German",
+        "iso3": "nds",
+        "leipzig": "nds_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "ne": {
+        "name": "Nepali",
+        "iso3": "nep",
+        "leipzig": "nep_news_2020_300K",
+        "frequencywords": null
+    },
+    "new": {
+        "name": "Newari",
+        "iso3": "new",
+        "leipzig": "new_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "ng": {
+        "name": "Ndonga",
+        "iso3": "ndo",
+        "leipzig": "ndo_community_2017",
+        "frequencywords": null
+    },
+    "ngl": {
+        "name": "Lomwe",
+        "iso3": "ngl",
+        "leipzig": "ngl_community_2017",
+        "frequencywords": null
+    },
+    "nl": {
+        "name": "Dutch",
+        "iso3": "nld",
+        "leipzig": "nld_news_2024_300K",
+        "frequencywords": "nl"
+    },
+    "nn": {
+        "name": "Norwegian Nynorsk",
+        "iso3": "nno",
+        "leipzig": "nno_wikipedia_2021_300K",
+        "frequencywords": "no"
+    },
+    "no": {
+        "name": "Norwegian",
+        "iso3": "nor",
+        "leipzig": "nor_news_2023_300K",
+        "frequencywords": "no"
+    },
+    "nr": {
+        "name": "South Ndebele",
+        "iso3": "nbl",
+        "leipzig": "nbl_community_2017",
+        "frequencywords": null
+    },
+    "nso": {
+        "name": "Pedi",
+        "iso3": "nso",
+        "leipzig": "nso-za_web_2020_10K",
+        "frequencywords": null
+    },
+    "nv": {
+        "name": "Navajo",
+        "iso3": "nav",
+        "leipzig": "nav_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "ny": {
+        "name": "Nyanja",
+        "iso3": "nya",
+        "leipzig": "nya_community_2017",
+        "frequencywords": null
+    },
+    "nyn": {
+        "name": "Nyankole",
+        "iso3": "nyn",
+        "leipzig": "nyn_community_2017",
+        "frequencywords": null
+    },
+    "om": {
+        "name": "Oromo",
+        "iso3": "orm",
+        "leipzig": "orm_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "or": {
+        "name": "Oriya",
+        "iso3": "ori",
+        "leipzig": "ori_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "os": {
+        "name": "Ossetian",
+        "iso3": "oss",
+        "leipzig": "oss_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "pa": {
+        "name": "Panjabi",
+        "iso3": "pan",
+        "leipzig": "pan_wikipedia_2021_300K",
+        "frequencywords": null
+    },
+    "pag": {
+        "name": "Pangasinan",
+        "iso3": "pag",
+        "leipzig": "pag_community_2017",
+        "frequencywords": null
+    },
+    "pam": {
+        "name": "Pampanga",
+        "iso3": "pam",
+        "leipzig": "pam_wikipedia_2016_10K",
+        "frequencywords": null
+    },
+    "pap": {
+        "name": "Papiamento",
+        "iso3": "pap",
+        "leipzig": "pap_news_2020_100K",
+        "frequencywords": null
+    },
+    "pcm": {
+        "name": "Nigerian Pidgin",
+        "iso3": "pcm",
+        "leipzig": "pcm_community_2017",
+        "frequencywords": null
+    },
+    "pfl": {
+        "name": "Pfaelzisch",
+        "iso3": "pfl",
+        "leipzig": "pfl_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "pl": {
+        "name": "Polish",
+        "iso3": "pol",
+        "leipzig": "pol_news_2024_300K",
+        "frequencywords": "pl"
+    },
+    "pms": {
+        "name": "Piemontese",
+        "iso3": "pms",
+        "leipzig": "pms_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "pnb": {
+        "name": "Western Panjabi",
+        "iso3": "pnb",
+        "leipzig": "pnb_wikipedia_2021_300K",
+        "frequencywords": null
+    },
+    "pnt": {
+        "name": "Pontic",
+        "iso3": "pnt",
+        "leipzig": "pnt_community_2017",
+        "frequencywords": null
+    },
+    "prs": {
+        "name": "Dari",
+        "iso3": "prs",
+        "leipzig": "prs_community_2017",
+        "frequencywords": null
+    },
+    "ps": {
+        "name": "Pushto",
+        "iso3": "pus",
+        "leipzig": "pus_news_2020_100K",
+        "frequencywords": null
+    },
+    "pt": {
+        "name": "Portuguese",
+        "iso3": "por",
+        "leipzig": "por_news_2024_300K",
+        "frequencywords": "pt"
+    },
+    "qu": {
+        "name": "Quechua",
+        "iso3": "que",
+        "leipzig": "que_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "rm": {
+        "name": "Romansh",
+        "iso3": "roh",
+        "leipzig": "roh-ch_web_2017_100K",
+        "frequencywords": null
+    },
+    "rn": {
+        "name": "Rundi",
+        "iso3": "run",
+        "leipzig": "run_community_2017",
+        "frequencywords": null
+    },
+    "ro": {
+        "name": "Romanian",
+        "iso3": "ron",
+        "leipzig": "ron_news_2024_300K",
+        "frequencywords": "ro"
+    },
+    "rom": {
+        "name": "Romany",
+        "iso3": "rom",
+        "leipzig": "rom_community_2019",
+        "frequencywords": null
+    },
+    "ru": {
+        "name": "Russian",
+        "iso3": "rus",
+        "leipzig": "rus_news_2024_300K",
+        "frequencywords": "ru"
+    },
+    "rue": {
+        "name": "Rusyn",
+        "iso3": "rue",
+        "leipzig": "rue_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "rw": {
+        "name": "Kinyarwanda",
+        "iso3": "kin",
+        "leipzig": "kin_community_2017_30K",
+        "frequencywords": null
+    },
+    "sa": {
+        "name": "Sanskrit",
+        "iso3": "san",
+        "leipzig": "san_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "sah": {
+        "name": "Yakut",
+        "iso3": "sah",
+        "leipzig": "sah_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "sc": {
+        "name": "Sardinian",
+        "iso3": "srd",
+        "leipzig": "srd_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "scn": {
+        "name": "Sicilian",
+        "iso3": "scn",
+        "leipzig": "scn_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "sco": {
+        "name": "Scots",
+        "iso3": "sco",
+        "leipzig": "sco_wikipedia_2016_100K",
+        "frequencywords": null
+    },
+    "sd": {
+        "name": "Sindhi",
+        "iso3": "snd",
+        "leipzig": "snd_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "se": {
+        "name": "Northern Sami",
+        "iso3": "sme",
+        "leipzig": "sme-no_news_2015_10K",
+        "frequencywords": null
+    },
+    "seh": {
+        "name": "Sena",
+        "iso3": "seh",
+        "leipzig": "seh_community_2017",
+        "frequencywords": null
+    },
+    "sgs": {
+        "name": "Samogitian",
+        "iso3": "sgs",
+        "leipzig": "sgs_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "sh": {
+        "name": "Serbo-Croatian",
+        "iso3": "hbs",
+        "leipzig": "hbs_wikipedia_2021_300K",
+        "frequencywords": "sr"
+    },
+    "si": {
+        "name": "Sinhala",
+        "iso3": "sin",
+        "leipzig": "sin_wikipedia_2021_100K",
+        "frequencywords": "si"
+    },
+    "sk": {
+        "name": "Slovak",
+        "iso3": "slk",
+        "leipzig": "slk_newscrawl_2016_300K",
+        "frequencywords": "sk"
+    },
+    "skr": {
+        "name": "Saraiki",
+        "iso3": "skr",
+        "leipzig": "skr_community_2017",
+        "frequencywords": null
+    },
+    "sl": {
+        "name": "Slovenian",
+        "iso3": "slv",
+        "leipzig": "slv_news_2020_300K",
+        "frequencywords": "sl"
+    },
+    "smi": {
+        "name": "Sami",
+        "iso3": "smi",
+        "leipzig": "smi_news_2020_10K",
+        "frequencywords": null
+    },
+    "sn": {
+        "name": "Shona",
+        "iso3": "sna",
+        "leipzig": "sna-zw_web_2018_100K",
+        "frequencywords": null
+    },
+    "snk": {
+        "name": "Soninke",
+        "iso3": "snk",
+        "leipzig": "snk_community_2017",
+        "frequencywords": null
+    },
+    "so": {
+        "name": "Somali",
+        "iso3": "som",
+        "leipzig": "som_newscrawl_2011_100K",
+        "frequencywords": null
+    },
+    "sq": {
+        "name": "Tosk Albanian",
+        "iso3": "als",
+        "leipzig": "als-sqi_news_2015_300K",
+        "frequencywords": "sq"
+    },
+    "sr": {
+        "name": "Serbian",
+        "iso3": "srp",
+        "leipzig": "srp_wikipedia_2021_300K",
+        "frequencywords": "sr"
+    },
+    "ss": {
+        "name": "Swati",
+        "iso3": "ssw",
+        "leipzig": "ssw-za_web_2020_10K",
+        "frequencywords": null
+    },
+    "st": {
+        "name": "Southern Sotho",
+        "iso3": "sot",
+        "leipzig": "sot-za_web_2018_10K",
+        "frequencywords": null
+    },
+    "su": {
+        "name": "Sundanese",
+        "iso3": "sun",
+        "leipzig": "sun-id_web_2013_300K",
+        "frequencywords": null
+    },
+    "suk": {
+        "name": "Sukuma",
+        "iso3": "suk",
+        "leipzig": "suk_community_2017",
+        "frequencywords": null
+    },
+    "sus": {
+        "name": "Susu",
+        "iso3": "sus",
+        "leipzig": "sus_community_2017",
+        "frequencywords": null
+    },
+    "sv": {
+        "name": "Swedish",
+        "iso3": "swe",
+        "leipzig": "swe_news_2023_300K",
+        "frequencywords": "sv"
+    },
+    "sw": {
+        "name": "Swahili",
+        "iso3": "swh",
+        "leipzig": "swh_wikipedia_2011_30K",
+        "frequencywords": null
+    },
+    "szl": {
+        "name": "Silesian",
+        "iso3": "szl",
+        "leipzig": "szl_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "ta": {
+        "name": "Tamil",
+        "iso3": "tam",
+        "leipzig": "tam_newscrawl_2011_300K",
+        "frequencywords": "ta"
+    },
+    "te": {
+        "name": "Telugu",
+        "iso3": "tel",
+        "leipzig": "tel_newscrawl_2011_300K",
+        "frequencywords": "te"
+    },
+    "tem": {
+        "name": "Timne",
+        "iso3": "tem",
+        "leipzig": "tem_community_2017",
+        "frequencywords": null
+    },
+    "tg": {
+        "name": "Tajik",
+        "iso3": "tgk",
+        "leipzig": "tgk-tj_web_2016_300K",
+        "frequencywords": null
+    },
+    "th": {
+        "name": "Thai",
+        "iso3": "tha",
+        "leipzig": "tha-th_web_2018_300K",
+        "frequencywords": "th"
+    },
+    "ti": {
+        "name": "Tigrinya",
+        "iso3": "tir",
+        "leipzig": "tir_community_2017",
+        "frequencywords": null
+    },
+    "tiv": {
+        "name": "Tiv",
+        "iso3": "tiv",
+        "leipzig": "tiv_community_2017",
+        "frequencywords": null
+    },
+    "tk": {
+        "name": "Turkmen",
+        "iso3": "tuk",
+        "leipzig": "tuk-tm_web_2016_100K",
+        "frequencywords": null
+    },
+    "tl": {
+        "name": "Tagalog",
+        "iso3": "tgl",
+        "leipzig": "tgl_wikipedia_2021_100K",
+        "frequencywords": "tl"
+    },
+    "tn": {
+        "name": "Tswana",
+        "iso3": "tsn",
+        "leipzig": "tsn-za_web_2020_10K",
+        "frequencywords": null
+    },
+    "tr": {
+        "name": "Turkish",
+        "iso3": "tur",
+        "leipzig": "tur_news_2024_300K",
+        "frequencywords": "tr"
+    },
+    "ts": {
+        "name": "Tsonga",
+        "iso3": "tso",
+        "leipzig": "tso-za_web_2020_10K",
+        "frequencywords": null
+    },
+    "tt": {
+        "name": "Tatar",
+        "iso3": "tat",
+        "leipzig": "tat_news_2015_300K",
+        "frequencywords": null
+    },
+    "tum": {
+        "name": "Tumbuka",
+        "iso3": "tum",
+        "leipzig": "tum_community_2017",
+        "frequencywords": null
+    },
+    "tyv": {
+        "name": "Tuvinian",
+        "iso3": "tyv",
+        "leipzig": "tyv_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "udm": {
+        "name": "Udmurt",
+        "iso3": "udm",
+        "leipzig": "udm_wikipedia_2016_10K",
+        "frequencywords": null
+    },
+    "ug": {
+        "name": "Uighur",
+        "iso3": "uig",
+        "leipzig": "uig_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "uk": {
+        "name": "Ukrainian",
+        "iso3": "ukr",
+        "leipzig": "ukr_news_2024_300K",
+        "frequencywords": "uk"
+    },
+    "ur": {
+        "name": "Urdu",
+        "iso3": "urd",
+        "leipzig": "urd_newscrawl_2016_300K",
+        "frequencywords": "ur"
+    },
+    "uz": {
+        "name": "Uzbek",
+        "iso3": "uzb",
+        "leipzig": "uzb_newscrawl_2011_100K",
+        "frequencywords": null
+    },
+    "ve": {
+        "name": "Venda",
+        "iso3": "ven",
+        "leipzig": "ven-za_web_2020_10K",
+        "frequencywords": null
+    },
+    "vec": {
+        "name": "Venetian",
+        "iso3": "vec",
+        "leipzig": "vec-hr_web_2015_100K",
+        "frequencywords": null
+    },
+    "vi": {
+        "name": "Vietnamese",
+        "iso3": "vie",
+        "leipzig": "vie_news_2022_300K",
+        "frequencywords": "vi"
+    },
+    "vls": {
+        "name": "Vlaams",
+        "iso3": "vls",
+        "leipzig": "vls_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "vo": {
+        "name": "Volapük",
+        "iso3": "vol",
+        "leipzig": "vol_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "vro": {
+        "name": "Võro",
+        "iso3": "vro",
+        "leipzig": "vro_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "wa": {
+        "name": "Walloon",
+        "iso3": "wln",
+        "leipzig": "wln_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "war": {
+        "name": "Waray (Philippines)",
+        "iso3": "war",
+        "leipzig": "war_wikipedia_2016_300K",
+        "frequencywords": null
+    },
+    "wo": {
+        "name": "Wolof",
+        "iso3": "wol",
+        "leipzig": "wol_community_2017",
+        "frequencywords": null
+    },
+    "wuu": {
+        "name": "Wu Chinese",
+        "iso3": "wuu",
+        "leipzig": "wuu_wikipedia_2021_100K",
+        "frequencywords": null
+    },
+    "xh": {
+        "name": "Xhosa",
+        "iso3": "xho",
+        "leipzig": "xho-za_web_2020_30K",
+        "frequencywords": null
+    },
+    "xmf": {
+        "name": "Mingrelian",
+        "iso3": "xmf",
+        "leipzig": "xmf_wikipedia_2021_30K",
+        "frequencywords": null
+    },
+    "yi": {
+        "name": "Eastern Yiddish",
+        "iso3": "ydd",
+        "leipzig": "ydd_community_2017",
+        "frequencywords": null
+    },
+    "yo": {
+        "name": "Yoruba",
+        "iso3": "yor",
+        "leipzig": "yor_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "za": {
+        "name": "Zhuang",
+        "iso3": "zha",
+        "leipzig": "zha_community_2017",
+        "frequencywords": null
+    },
+    "zea": {
+        "name": "Zeeuws",
+        "iso3": "zea",
+        "leipzig": "zea_wikipedia_2021_10K",
+        "frequencywords": null
+    },
+    "zh": {
+        "name": "Mandarin Chinese",
+        "iso3": "cmn",
+        "leipzig": "cmn_wikipedia_2021_300K",
+        "frequencywords": "zh_cn"
+    },
+    "zu": {
+        "name": "Zulu",
+        "iso3": "zul",
+        "leipzig": "zul-za_web_2020_100K",
+        "frequencywords": null
+    }
+}

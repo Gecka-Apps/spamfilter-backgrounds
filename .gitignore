@@ -1,0 +1,16 @@
+/vendor/
+/sources/*
+!/sources/leipzig-links.jsonl
+/dist/*
+!/dist/.gitkeep
+
+# IDE
+/.idea/
+/.vscode/
+*.iml
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db

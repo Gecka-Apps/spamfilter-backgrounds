@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Publishes a release: bin/prepare-release rebuilds the tables, writes the
+# manifest, checks it against dist/ and packs the Tatoeba exports; this
+# script then tags the commit, pushes the tag and creates the GitHub release
+# with the tables, the manifest and the archive as assets.
+#
+#   bin/release v1.3 [--dry-run] [--no-build]
+#
+# The network side runs here, on the machine that holds the SSH key and the
+# gh login, while the PHP side runs wherever `php` resolves. HEAD must be on
+# origin/main here and in the filter's checkout, since the manifest names
+# both commits. --dry-run does everything but the tag, the push and the
+# release. --no-build keeps the tables in dist/ and only redoes the rest,
+# for a release that failed after the build.
+
+set -euo pipefail
+
+root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+
+tag=''
+dry_run=0
+prepare_args=()
+for arg in "$@"; do
+    case $arg in
+        --dry-run) dry_run=1 ;;
+        --no-build) prepare_args+=("$arg") ;;
+        --*) echo "Unknown option $arg" >&2; exit 2 ;;
+        *) tag=$arg ;;
+    esac
+done
+if [[ -z $tag ]]; then
+    echo "Usage: bin/release v<hash-version>.<n> [--dry-run] [--no-build]" >&2
+    exit 2
+fi
+
+library=$(readlink -f vendor/gecka/spamfilter)
+for dir in "$root" "$library"; do
+    git -C "$dir" fetch --quiet origin
+    if ! git -C "$dir" merge-base --is-ancestor HEAD origin/main; then
+        echo "release: $dir: HEAD is not on origin/main, push it first" >&2
+        exit 1
+    fi
+done
+if [[ -n $(git ls-remote --tags origin "$tag") ]]; then
+    echo "release: the tag $tag exists on origin" >&2
+    exit 1
+fi
+if (( ! dry_run )) && ! gh auth status >/dev/null 2>&1; then
+    echo "release: gh is not logged in" >&2
+    exit 1
+fi
+
+php bin/prepare-release "$tag" "${prepare_args[@]}"
+mapfile -t assets < dist/release-assets.txt
+
+if (( dry_run )); then
+    echo "Dry run: not tagging, not pushing, not releasing."
+    exit 0
+fi
+
+echo
+echo "== tag $tag"
+git tag "$tag"
+echo "== push of the tag"
+git push origin "$tag"
+echo "== release"
+gh release create "$tag" --title "$tag" --notes-file dist/release-notes.md "${assets[@]}"
+
+uploaded=$(gh release view "$tag" --json assets --jq '.assets | length')
+if [[ $uploaded != "${#assets[@]}" ]]; then
+    echo "release: the release holds $uploaded assets, ${#assets[@]} were expected: check it on GitHub" >&2
+    exit 1
+fi
+gh release view "$tag" --json url --jq .url

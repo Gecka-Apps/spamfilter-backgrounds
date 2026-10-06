@@ -1,0 +1,45 @@
+{
+    "name": "gecka/spamfilter-backgrounds",
+    "description": "Build pipeline for the per-language background tables of gecka/spamfilter",
+    "type": "project",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Laurent Dinclaux",
+            "email": "laurent@gecka.nc"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
+        "gecka/spamfilter": "dev-main"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../spamfilter",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Gecka\\SpamFilter\\Backgrounds\\": "src/"
+        }
+    },
+    "scripts": {
+        "lint": "pint --test",
+        "analyse": "phpstan analyse"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

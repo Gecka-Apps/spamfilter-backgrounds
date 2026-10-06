@@ -1,0 +1,105 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/*
+ * Regenerates dist/<code>.json for every table in dist/ from the sources
+ * kept in sources/: the number of sentences in the Leipzig file and the
+ * number of distinct words the FrequencyWords list contributed. The
+ * everyday-sentences source and its count are those bin/build recorded,
+ * carried over as they are. Every input file gets its SHA-256, so that a
+ * rebuild whose table differs can be traced to the source that changed.
+ *
+ *   bin/facts
+ */
+
+use Gecka\SpamFilter\Tokenizer\FeatureExtractor;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+
+/** @var array<string, array{name: string, iso3: string, leipzig: string, frequencywords: ?string}> $catalogue */
+$catalogue = json_decode((string) file_get_contents("$root/catalogue.json"), true);
+
+$extractor = new FeatureExtractor();
+$written = 0;
+
+foreach (glob("$root/dist/*.bin") ?: [] as $file) {
+    $code = pathinfo($file, PATHINFO_FILENAME);
+    $entry = $catalogue[$code] ?? null;
+    if ($entry === null) {
+        fwrite(STDERR, "$code: not in the catalogue\n");
+        continue;
+    }
+
+    $sentencesFile = "$root/sources/leipzig/{$entry['leipzig']}-sentences.txt";
+    $sentences = 0;
+    if (is_file($sentencesFile)) {
+        $handle = fopen($sentencesFile, 'r');
+        if ($handle !== false) {
+            while (($line = fgets($handle)) !== false) {
+                $tab = strpos($line, "\t");
+                if (trim($tab === false ? $line : substr($line, $tab + 1)) !== '') {
+                    $sentences++;
+                }
+            }
+            fclose($handle);
+        }
+    } else {
+        fwrite(STDERR, "$code: no sentences file, counts unknown\n");
+    }
+
+    $words = 0;
+    $list = $entry['frequencywords'] !== null ? "$root/sources/frequencywords/{$entry['frequencywords']}_50k.txt" : null;
+    if ($list !== null && is_file($list)) {
+        $features = [];
+        foreach (file($list, FILE_IGNORE_NEW_LINES) ?: [] as $line) {
+            $parts = explode(' ', trim($line));
+            if (count($parts) !== 2 || ! ctype_digit($parts[1])) {
+                continue;
+            }
+            foreach ($extractor->extract($parts[0]) as $feature => $n) {
+                if (str_starts_with((string) $feature, 'w:')) {
+                    $features[$feature] = true;
+                }
+            }
+        }
+        $words = count($features);
+    }
+
+    $previous = is_file("$root/dist/$code.json") ? (array) json_decode((string) file_get_contents("$root/dist/$code.json"), true) : [];
+    $register = $previous['register'] ?? null;
+    $registerFile = match ($register) {
+        'tatoeba' => "$root/sources/tatoeba/{$entry['iso3']}_sentences.tsv",
+        'opensubtitles' => "$root/sources/opensubtitles/{$entry['frequencywords']}.txt",
+        default => null,
+    };
+    $inputs = [];
+    if (is_file($sentencesFile)) {
+        $inputs['leipzig'] = hash_file('sha256', $sentencesFile);
+    }
+    if ($list !== null && is_file($list)) {
+        $inputs['frequencywords'] = hash_file('sha256', $list);
+    }
+    if ($registerFile !== null && is_file($registerFile)) {
+        $inputs[$register] = hash_file('sha256', $registerFile);
+    }
+
+    file_put_contents("$root/dist/$code.json", json_encode([
+        'corpus' => $entry['leipzig'],
+        'sentences' => $sentences,
+        'words' => $words,
+        'frequencywords' => $entry['frequencywords'],
+        'register' => $register,
+        'register_sentences' => (int) ($previous['register_sentences'] ?? 0),
+        'register_share' => (float) ($previous['register_share'] ?? 0.0),
+        'inputs' => $inputs,
+    ]) . "\n");
+    $written++;
+}
+
+printf("%d facts files written\n", $written);

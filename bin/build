@@ -1,0 +1,289 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/*
+ * Builds dist/<code>.bin for the given languages (or "all") from the sources
+ * named in catalogue.json: the Leipzig sentences are extracted like any text,
+ * the FrequencyWords list is scaled to the sentences' mass and added.
+ *
+ *   bin/build fr en de
+ *   bin/build all [--bits=20] [--force] [--register=<share>] [--dist=<dir>]
+ *
+ * News text lacks the register of correspondence, so sentences of everyday
+ * speech are added at a quarter of the Leipzig mass: Tatoeba when it has at
+ * least 20 000 sentences for the language, the first 300 000 sentences of
+ * the OPUS OpenSubtitles monolingual file otherwise, nothing when neither
+ * reaches that floor, since scaling a few hundred sentences up to that
+ * share would make the table about them. --register sets another share, 0
+ * leaves both out. --dist writes the tables elsewhere than dist/. Sources
+ * are downloaded into sources/ once and kept.
+ */
+
+use Gecka\SpamFilter\Model\Background;
+use Gecka\SpamFilter\Model\CountTable;
+use Gecka\SpamFilter\Tokenizer\FeatureExtractor;
+use Gecka\SpamFilter\Tokenizer\FeatureHasher;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+const REGISTER_MIN_SENTENCES = 20_000;
+
+// The word lists are read at a fixed commit, so a rebuild sees the same files
+const FREQUENCYWORDS_COMMIT = '525f9b560de45753a5ea01069454e72e9aa541c6';
+
+const OPENSUBTITLES_SENTENCES = 300_000;
+
+$root = dirname(__DIR__);
+// Options may come before or after the language codes
+$arguments = array_slice($argv, 1);
+$codes = array_values(array_filter($arguments, static fn(string $a): bool => ! str_starts_with($a, '--')));
+$force = in_array('--force', $arguments, true);
+$bits = 20;
+$registerWeight = 0.25;
+$dist = "$root/dist";
+foreach ($arguments as $argument) {
+    if (preg_match('/^--bits=(\d+)$/', $argument, $m) === 1) {
+        $bits = (int) $m[1];
+    } elseif (preg_match('/^--register=([\d.]+)$/', $argument, $m) === 1) {
+        $registerWeight = (float) $m[1];
+    } elseif (preg_match('/^--dist=(.+)$/', $argument, $m) === 1) {
+        $dist = str_starts_with($m[1], '/') ? $m[1] : "$root/{$m[1]}";
+    }
+}
+if (! is_dir($dist) && ! mkdir($dist, 0755, true)) {
+    fwrite(STDERR, "Cannot create $dist\n");
+    exit(1);
+}
+
+/** @var array<string, array{name: string, iso3: string, leipzig: string, frequencywords: ?string}> $catalogue */
+$catalogue = json_decode((string) file_get_contents("$root/catalogue.json"), true);
+
+if ($codes === [] || $codes === ['all']) {
+    $codes = array_keys($catalogue);
+}
+
+$download = static function (string $url, string $dest): bool {
+    if (is_file($dest) && filesize($dest) > 0) {
+        return true;
+    }
+    @mkdir(dirname($dest), 0755, true);
+    $command = sprintf('curl -sS -L --fail --retry 3 --max-time 900 -o %s %s', escapeshellarg("$dest.part"), escapeshellarg($url));
+    exec($command, $output, $status);
+    if ($status !== 0) {
+        @unlink("$dest.part");
+
+        return false;
+    }
+
+    return rename("$dest.part", $dest);
+};
+
+$extractor = new FeatureExtractor();
+$hasher = new FeatureHasher();
+$built = 0;
+
+/**
+ * Extracts every line of a file into a table of its own, the sentence being
+ * the text after $skipColumns tab-separated columns.
+ *
+ * @return array{0: CountTable, 1: int} The table and the number of sentences
+ */
+$extractSentences = static function (string $path, int $skipColumns) use ($extractor, $hasher, $bits): array {
+    $partial = new CountTable(1 << $bits);
+    $count = 0;
+    $handle = fopen($path, 'r');
+    while ($handle !== false && ($line = fgets($handle)) !== false) {
+        $columns = explode("\t", rtrim($line, "\r\n"), $skipColumns + 1);
+        $sentence = trim($columns[$skipColumns] ?? '');
+        if ($sentence === '') {
+            continue;
+        }
+        foreach ($hasher->hashAll($extractor->extract($sentence)) as $hash => $n) {
+            $partial->add($hash, $n);
+        }
+        $count++;
+    }
+    if ($handle !== false) {
+        fclose($handle);
+    }
+
+    return [$partial, $count];
+};
+
+foreach ($codes as $code) {
+    if (! isset($catalogue[$code])) {
+        fwrite(STDERR, "Unknown language \"$code\"\n");
+        continue;
+    }
+    $entry = $catalogue[$code];
+    $out = "$dist/$code.bin";
+    if (is_file($out) && ! $force) {
+        echo "keep  $code\n";
+        continue;
+    }
+
+    // Leipzig sentences
+    $archive = "$root/sources/leipzig/{$entry['leipzig']}.tar.gz";
+    $sentencesFile = "$root/sources/leipzig/{$entry['leipzig']}-sentences.txt";
+    if (! is_file($sentencesFile)) {
+        if (! $download("https://downloads.wortschatz-leipzig.de/corpora/{$entry['leipzig']}.tar.gz", $archive)) {
+            fwrite(STDERR, "skip  $code: cannot download {$entry['leipzig']}\n");
+            continue;
+        }
+        // Recent archives wrap their files in a directory, older ones do not:
+        // extract into a scratch directory and pick the sentences file wherever it is
+        $scratch = "$root/sources/leipzig/.extract-{$entry['leipzig']}";
+        @mkdir($scratch, 0755, true);
+        exec(sprintf('tar -xzf %s -C %s --wildcards %s 2>/dev/null', escapeshellarg($archive), escapeshellarg($scratch), escapeshellarg('*-sentences.txt')));
+        @unlink($archive);
+        $found = array_merge(glob("$scratch/*-sentences.txt") ?: [], glob("$scratch/*/*-sentences.txt") ?: []);
+        if ($found === []) {
+            fwrite(STDERR, "skip  $code: no sentences file in {$entry['leipzig']}\n");
+            exec(sprintf('rm -rf %s', escapeshellarg($scratch)));
+            continue;
+        }
+        rename($found[0], $sentencesFile);
+        exec(sprintf('rm -rf %s', escapeshellarg($scratch)));
+    }
+
+    $table = new CountTable(1 << $bits);
+    $sentences = 0;
+    $handle = fopen($sentencesFile, 'r');
+    if ($handle === false) {
+        fwrite(STDERR, "skip  $code: cannot read sentences\n");
+        continue;
+    }
+    while (($line = fgets($handle)) !== false) {
+        $tab = strpos($line, "\t");
+        $sentence = trim($tab === false ? $line : substr($line, $tab + 1));
+        if ($sentence === '') {
+            continue;
+        }
+        foreach ($hasher->hashAll($extractor->extract($sentence)) as $hash => $count) {
+            $table->add($hash, $count);
+        }
+        $sentences++;
+    }
+    fclose($handle);
+
+    // Everyday sentences, scaled to a share of the Leipzig mass: Tatoeba
+    // first, OpenSubtitles when Tatoeba is short, neither below the floor
+    $register = ['source' => null, 'sentences' => 0];
+    if ($registerWeight > 0.0) {
+        $iso3 = $entry['iso3'];
+        $tsv = "$root/sources/tatoeba/{$iso3}_sentences.tsv";
+        if (! is_file($tsv) && $download("https://downloads.tatoeba.org/exports/per_language/$iso3/{$iso3}_sentences.tsv.bz2", "$tsv.bz2")) {
+            exec(sprintf('bunzip2 -f %s', escapeshellarg("$tsv.bz2")));
+        }
+        // The Tatoeba export has an id and a language code before the sentence
+        [$partial, $count] = is_file($tsv) ? $extractSentences($tsv, 2) : [null, 0];
+        if ($count >= REGISTER_MIN_SENTENCES) {
+            $register = ['source' => 'tatoeba', 'sentences' => $count];
+        } elseif ($entry['frequencywords'] !== null) {
+            $opus = $entry['frequencywords'];
+            $text = "$root/sources/opensubtitles/$opus.txt";
+            if (! is_file($text)) {
+                @mkdir(dirname($text), 0755, true);
+                // The monolingual file is up to a few gigabytes; the head of the stream is enough
+                exec(sprintf(
+                    'curl -sS -L --fail --max-time 900 %s 2>/dev/null | gunzip -c 2>/dev/null | head -n %d > %s',
+                    escapeshellarg("https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2018/mono/$opus.txt.gz"),
+                    OPENSUBTITLES_SENTENCES,
+                    escapeshellarg("$text.part"),
+                ));
+                if (is_file("$text.part") && filesize("$text.part") > 0) {
+                    rename("$text.part", $text);
+                } else {
+                    @unlink("$text.part");
+                }
+            }
+            [$partial, $count] = is_file($text) ? $extractSentences($text, 0) : [null, 0];
+            if ($count >= REGISTER_MIN_SENTENCES) {
+                $register = ['source' => 'opensubtitles', 'sentences' => $count];
+            }
+        }
+
+        if ($register['source'] !== null && $partial !== null && $partial->total() > 0) {
+            $scale = $registerWeight * $table->total() / $partial->total();
+            foreach (unpack('N*', $partial->toBinary()) ?: [] as $slot => $n) {
+                $scaled = (int) round($n * $scale);
+                if ($scaled > 0) {
+                    $table->add($slot - 1, $scaled);
+                }
+            }
+        } else {
+            fwrite(STDERR, sprintf("note  %s: no everyday sentences source with %d sentences or more\n", $code, REGISTER_MIN_SENTENCES));
+        }
+    }
+
+    // FrequencyWords list, scaled to the sentences' mass
+    $words = 0;
+    if ($entry['frequencywords'] !== null) {
+        $fw = $entry['frequencywords'];
+        $list = "$root/sources/frequencywords/{$fw}_50k.txt";
+        if ($download("https://raw.githubusercontent.com/hermitdave/FrequencyWords/" . FREQUENCYWORDS_COMMIT . "/content/2018/$fw/{$fw}_50k.txt", $list)) {
+            $features = [];
+            $mass = 0;
+            foreach (file($list, FILE_IGNORE_NEW_LINES) ?: [] as $line) {
+                $parts = explode(' ', trim($line));
+                if (count($parts) !== 2 || ! ctype_digit($parts[1])) {
+                    continue;
+                }
+                foreach ($extractor->extract($parts[0]) as $feature => $n) {
+                    if (str_starts_with((string) $feature, 'w:')) {
+                        $features[$feature] = ($features[$feature] ?? 0) + (int) $parts[1];
+                        $mass += (int) $parts[1];
+                    }
+                }
+            }
+            if ($mass > 0) {
+                $scale = $table->total() / $mass;
+                foreach ($features as $feature => $count) {
+                    $scaled = (int) round($count * $scale);
+                    if ($scaled > 0) {
+                        $table->add($hasher->hash((string) $feature), $scaled);
+                        $words++;
+                    }
+                }
+            }
+        }
+    }
+
+    Background::write($table, $out);
+    // Build facts next to the table, merged into the manifest so a user can
+    // tell a table built from 300 000 sentences from one built from 50
+    file_put_contents("$dist/$code.json", json_encode([
+        'corpus' => $entry['leipzig'],
+        'sentences' => $sentences,
+        'words' => $words,
+        'frequencywords' => $entry['frequencywords'],
+        'register' => $register['source'],
+        'register_sentences' => $register['sentences'],
+        'register_share' => $register['source'] === null ? 0.0 : $registerWeight,
+        'inputs' => array_filter([
+            'leipzig' => hash_file('sha256', $sentencesFile),
+            'frequencywords' => $entry['frequencywords'] !== null && is_file("$root/sources/frequencywords/{$entry['frequencywords']}_50k.txt")
+                ? hash_file('sha256', "$root/sources/frequencywords/{$entry['frequencywords']}_50k.txt")
+                : null,
+            'tatoeba' => $register['source'] === 'tatoeba' ? hash_file('sha256', "$root/sources/tatoeba/{$entry['iso3']}_sentences.tsv") : null,
+            'opensubtitles' => $register['source'] === 'opensubtitles' ? hash_file('sha256', "$root/sources/opensubtitles/{$entry['frequencywords']}.txt") : null,
+        ]),
+    ]) . "\n");
+    $built++;
+    printf(
+        "built %-4s %-28s %7d sentences  %6d words  %7d %-13s %5.2f MB\n",
+        $code,
+        $entry['name'],
+        $sentences,
+        $words,
+        $register['sentences'],
+        $register['source'] ?? '-',
+        filesize($out) / 1048576,
+    );
+}
+
+printf("\n%d tables built\n", $built);

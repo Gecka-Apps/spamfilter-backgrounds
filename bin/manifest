@@ -1,0 +1,85 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/*
+ * Writes dist/manifest.json describing every table in dist/: the file to
+ * download, its size and SHA-256, the feature hash version it was built for
+ * and its sources. The spamfilter download command reads it.
+ *
+ *   bin/manifest [--version=v1.3] [--base-url=https://github.com/Gecka-Apps/spamfilter-backgrounds/releases/latest/download/]
+ *
+ * --version names the release the manifest describes, so a site can tell
+ * which one it holds; bin/spamfilter-background --check reports it.
+ */
+
+use Gecka\SpamFilter\Tokenizer\FeatureHasher;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$options = getopt('', ['base-url:', 'version:']);
+$baseUrl = rtrim((string) ($options['base-url'] ?? 'https://github.com/Gecka-Apps/spamfilter-backgrounds/releases/latest/download/'), '/') . '/';
+
+/** @var array<string, array{name: string, iso3: string, leipzig: string, frequencywords: ?string}> $catalogue */
+$catalogue = json_decode((string) file_get_contents("$root/catalogue.json"), true);
+
+$languages = [];
+foreach (glob("$root/dist/*.bin") ?: [] as $file) {
+    $code = pathinfo($file, PATHINFO_FILENAME);
+    $entry = $catalogue[$code] ?? null;
+    $facts = is_file("$root/dist/$code.json") ? (array) json_decode((string) file_get_contents("$root/dist/$code.json"), true) : [];
+    $languages[$code] = [
+        'name' => $entry['name'] ?? $code,
+        'file' => basename($file),
+        'url' => $baseUrl . basename($file),
+        'bytes' => filesize($file),
+        'sha256' => hash_file('sha256', $file),
+        'sentences' => (int) ($facts['sentences'] ?? 0),
+        'words' => (int) ($facts['words'] ?? 0),
+        // SHA-256 of every input file the table was built from, so a rebuild
+        // that differs can be traced to the source that changed
+        'inputs' => (array) ($facts['inputs'] ?? []),
+        'sources' => array_values(array_filter([
+            $entry !== null ? 'Leipzig Corpora Collection ' . $entry['leipzig'] . ' (CC-BY)' : null,
+            $entry !== null && $entry['frequencywords'] !== null ? 'FrequencyWords ' . $entry['frequencywords'] . ' (MIT)' : null,
+            match ($facts['register'] ?? null) {
+                'tatoeba' => sprintf('Tatoeba, %d sentences (CC-BY)', (int) ($facts['register_sentences'] ?? 0)),
+                'opensubtitles' => sprintf('OPUS OpenSubtitles 2018, %d sentences', (int) ($facts['register_sentences'] ?? 0)),
+                default => null,
+            },
+        ])),
+    ];
+}
+ksort($languages);
+
+// The commit of this repository and of the filter whose extractor cut the
+// sentences, with -dirty when the working tree had changes, so a release
+// says what it was built from
+$commit = static function (string $directory): ?string {
+    $head = trim((string) shell_exec(sprintf('git -C %s rev-parse HEAD 2>/dev/null', escapeshellarg($directory))));
+    if ($head === '') {
+        return null;
+    }
+    $changes = trim((string) shell_exec(sprintf('git -C %s status --porcelain 2>/dev/null', escapeshellarg($directory))));
+
+    return $head . ($changes === '' ? '' : '-dirty');
+};
+$library = realpath("$root/vendor/gecka/spamfilter");
+
+$manifest = [
+    'hash_version' => FeatureHasher::VERSION,
+    'version' => isset($options['version']) ? (string) $options['version'] : null,
+    'generated' => date('c'),
+    'built_from' => [
+        'spamfilter-backgrounds' => $commit($root),
+        'spamfilter' => $library === false ? null : $commit($library),
+    ],
+    'languages' => $languages,
+];
+
+file_put_contents("$root/dist/manifest.json", json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n");
+printf("%d languages in dist/manifest.json\n", count($languages));

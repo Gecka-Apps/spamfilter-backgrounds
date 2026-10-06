@@ -1,0 +1,95 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/*
+ * Writes catalogue.json: for every language, which Leipzig corpus and which
+ * FrequencyWords list the table is built from.
+ *
+ *   bin/catalogue [--no-probe]
+ *
+ * The Leipzig list comes from sources/leipzig-links.jsonl (a dump of the
+ * Hugging Face mirror imvladikon/leipzig_corpora_collection, the download
+ * site itself refusing automated listing). The mirror stops around 2021, so
+ * newer yearly releases of the chosen corpus are probed with HEAD requests
+ * unless --no-probe is given.
+ *
+ * Preference: 300K sentences over 1M (a download of 80 MB rather than 260),
+ * then 100K, 30K, 10K; news over newscrawl, Wikipedia and web; the most
+ * recent year.
+ */
+
+use Gecka\SpamFilter\Backgrounds\Iso639;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$probe = ! in_array('--no-probe', $argv, true);
+
+$rows = array_map(static fn(string $line): array => (array) json_decode($line, true), file("$root/sources/leipzig-links.jsonl", FILE_IGNORE_NEW_LINES) ?: []);
+
+// FrequencyWords directories, from the GitHub API
+$tree = json_decode((string) file_get_contents('https://api.github.com/repos/hermitdave/FrequencyWords/contents/content/2018', false, stream_context_create(['http' => ['header' => "User-Agent: spamfilter-backgrounds\r\n"]])), true);
+$frequencyWords = array_values(array_map(static fn(array $e): string => (string) $e['name'], array_filter(is_array($tree) ? $tree : [], static fn(array $e): bool => $e['type'] === 'dir')));
+printf("FrequencyWords: %d languages\n", count($frequencyWords));
+
+$kindRank = ['news' => 0, 'newscrawl' => 1, 'wikipedia' => 2, 'web' => 3, 'web-public' => 4, 'newscrawl-public' => 5, 'mixed' => 6, 'mixed-typical' => 7, 'news-typical' => 8, 'community' => 9, 'newscrawl-OSIAN' => 10, 'web-part1' => 11];
+$sizeRank = ['300K' => 0, '1M' => 1, '100K' => 2, '30K' => 3, '10K' => 4];
+
+$byLanguage = [];
+foreach ($rows as $row) {
+    $byLanguage[(string) $row['language_short']]['name'] = (string) $row['language'];
+    $byLanguage[(string) $row['language_short']]['rows'][] = $row;
+}
+ksort($byLanguage);
+
+$exists = static function (string $dataId): bool {
+    $context = stream_context_create(['http' => ['method' => 'HEAD', 'timeout' => 20, 'ignore_errors' => true]]);
+    $headers = @get_headers("https://downloads.wortschatz-leipzig.de/corpora/$dataId.tar.gz", true, $context);
+
+    return is_array($headers) && preg_match('/\b200\b/', (string) $headers[0]) === 1;
+};
+
+$catalogue = [];
+foreach ($byLanguage as $iso3 => $language) {
+    $candidates = $language['rows'];
+    usort($candidates, static function (array $a, array $b) use ($kindRank, $sizeRank): int {
+        $kind = static fn(array $r): int => $kindRank[explode('_', (string) $r['data_id'])[1] ?? ''] ?? 99;
+        $size = static fn(array $r): int => $sizeRank[(string) $r['size']] ?? 50;
+
+        return [$size($a), $kind($a), -(int) $a['year']] <=> [$size($b), $kind($b), -(int) $b['year']];
+    });
+    $pick = $candidates[0];
+    $dataId = (string) $pick['data_id'];
+
+    // A newer yearly release of the same corpus, when the mirror is behind
+    if ($probe && preg_match('/^(.*_)(\d{4})(_\d+[KM])$/', $dataId, $m) === 1) {
+        for ($year = (int) date('Y'); $year > (int) $m[2]; $year--) {
+            if ($exists("{$m[1]}{$year}{$m[3]}")) {
+                $dataId = "{$m[1]}{$year}{$m[3]}";
+                break;
+            }
+        }
+    }
+
+    $code = Iso639::tableCode($iso3);
+    if (isset($catalogue[$code])) {
+        // Two Leipzig codes for one table (e.g. zho and cmn): keep the larger corpus
+        continue;
+    }
+
+    $catalogue[$code] = [
+        'name' => $language['name'],
+        'iso3' => $iso3,
+        'leipzig' => $dataId,
+        'frequencywords' => Iso639::frequencyWords($code, $frequencyWords),
+    ];
+    printf("%-4s %-28s %-32s %s\n", $code, $language['name'], $dataId, $catalogue[$code]['frequencywords'] ?? '-');
+}
+
+ksort($catalogue);
+file_put_contents("$root/catalogue.json", json_encode($catalogue, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n");
+printf("\n%d languages written to catalogue.json\n", count($catalogue));
