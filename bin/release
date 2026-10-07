@@ -17,6 +17,9 @@
 
 set -euo pipefail
 
+# The release URL and the asset count go to stdout, not to a pager
+export GH_PAGER=cat
+
 root=$(cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$root"
 
