@@ -61,11 +61,27 @@ do is misclassify, which shows on the first messages. The download command
 checks the SHA-256 of every table against the manifest and keeps nothing
 that differs; `--check` reports a table that changed since. The manifest
 comes from the same release as the tables, so that check guards the
-transport, not the publisher. Two things do: the tables are reproducible
-from public sources, below, so anyone can rebuild a release and compare;
-and a detached signature of the manifest is planned once the first release
-is out. To follow a release rather than `latest`, give its manifest URL
-with `--manifest=`.
+transport, not the publisher. Two things do. The tables are reproducible
+from public sources, below, so anyone can rebuild a release and compare.
+And the manifest is signed: every release carries `manifest.json.sig`, an
+ECDSA P-384 signature over the SHA-256 of `manifest.json`, and
+`spamfilter-backgrounds.crt`, the signing certificate, issued by the Gecka
+root CA for code signing and valid two years. The root certificate is in
+[`signing/gecka-root-ca.crt`](signing/gecka-root-ca.crt), SHA-256
+fingerprint
+`84:A5:BD:E7:B0:AF:4A:0E:75:44:3C:6B:C2:BB:AB:21:05:7E:C8:8E:93:D3:FA:40:19:8E:71:AB:D1:5B:76:98`.
+To check a release by hand:
+
+```sh
+openssl verify -purpose any -CAfile gecka-root-ca.crt spamfilter-backgrounds.crt
+openssl x509 -in spamfilter-backgrounds.crt -noout -ext extendedKeyUsage   # Code Signing
+openssl dgst -sha256 -verify <(openssl x509 -in spamfilter-backgrounds.crt -pubkey -noout) \
+        -signature manifest.json.sig manifest.json
+```
+
+The filter does not verify the signature itself yet; `spamfilter-background`
+trusts the release it downloads from. To follow a release rather than
+`latest`, give its manifest URL with `--manifest=`.
 
 ## Reproducing the published tables
 
@@ -111,6 +127,7 @@ with the two manifests.
 ## Publishing
 
 ```sh
+export SPAMFILTER_SIGNING_KEY=<path to the signing key, outside the repository>
 bin/release v<hash-version>.<n> --dry-run   # everything but the tag, the push and the release
 bin/release v<hash-version>.<n>
 ```
@@ -118,10 +135,12 @@ bin/release v<hash-version>.<n>
 `bin/release` runs `bin/prepare-release`, which rebuilds every table from
 the sources on disk, writes the facts and the manifest, checks that the
 manifest describes exactly the tables in `dist/` and packs the Tatoeba
-exports the tables were built from; it then tags the commit, pushes the
-tag and creates the GitHub release with the tables, the manifest and the
-archive. The PHP side runs wherever `php` resolves, the git and `gh` side
-on the machine that runs the script. It refuses a tag for another feature
+exports the tables were built from; it then signs the manifest with
+`bin/sign`, tags the commit, pushes the tag and creates the GitHub release
+with the tables, the manifest, its signature, the signing certificate and
+the archive. The PHP side runs wherever `php` resolves, the signing, git
+and `gh` side on the machine that runs the script, where the signing key
+and its passphrase stay. It refuses a tag for another feature
 hash version than the installed filter's, an unclean working tree here or
 in the filter, and a commit that is not on `origin/main` yet.
 

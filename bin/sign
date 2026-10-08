@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Signs dist/manifest.json with the release signing key and checks the
+# result: the certificate in signing/ must chain to the Gecka root and the
+# signature must verify with it. Writes dist/manifest.json.sig, a DER
+# ECDSA signature over SHA-256, the form `openssl dgst` verifies.
+#
+#   bin/sign [--key=<path>] [<manifest>]
+#
+# The key is a passphrase-protected PEM kept outside the repository; its
+# path comes from --key or from SPAMFILTER_SIGNING_KEY. The passphrase is
+# asked on the terminal.
+
+set -euo pipefail
+
+root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+
+key=${SPAMFILTER_SIGNING_KEY:-}
+manifest=dist/manifest.json
+for arg in "$@"; do
+    case $arg in
+        --key=*) key=${arg#--key=} ;;
+        --*) echo "Unknown option $arg" >&2; exit 2 ;;
+        *) manifest=$arg ;;
+    esac
+done
+if [[ -z $key ]]; then
+    echo "sign: no signing key, pass --key=<path> or set SPAMFILTER_SIGNING_KEY" >&2
+    exit 2
+fi
+if [[ ! -r $key ]]; then
+    echo "sign: cannot read $key" >&2
+    exit 1
+fi
+if [[ ! -f $manifest ]]; then
+    echo "sign: $manifest does not exist" >&2
+    exit 1
+fi
+
+cert=signing/spamfilter-backgrounds.crt
+ca=signing/gecka-root-ca.crt
+# OpenSSL 3.0 has no codesign purpose: chain with any purpose, then the
+# extended key usage by hand
+openssl verify -purpose any -CAfile "$ca" "$cert" >/dev/null
+if ! openssl x509 -in "$cert" -noout -ext extendedKeyUsage | grep -q 'Code Signing'; then
+    echo "sign: $cert is not a code signing certificate" >&2
+    exit 1
+fi
+openssl dgst -sha256 -sign "$key" -out "$manifest.sig" "$manifest"
+openssl dgst -sha256 -verify <(openssl x509 -in "$cert" -pubkey -noout) -signature "$manifest.sig" "$manifest" >/dev/null
+echo "signed $manifest with $(openssl x509 -in "$cert" -noout -subject | sed 's/^subject=//')"

@@ -6,14 +6,17 @@
 # script then tags the commit, pushes the tag and creates the GitHub release
 # with the tables, the manifest and the archive as assets.
 #
-#   bin/release v1.3 [--dry-run] [--no-build]
+#   bin/release v1.3 [--key=<path>] [--dry-run] [--no-build]
 #
-# The network side runs here, on the machine that holds the SSH key and the
-# gh login, while the PHP side runs wherever `php` resolves. HEAD must be on
-# origin/main here and in the filter's checkout, since the manifest names
-# both commits. --dry-run does everything but the tag, the push and the
-# release. --no-build keeps the tables in dist/ and only redoes the rest,
-# for a release that failed after the build.
+# The network side and the signing run here, on the machine that holds the
+# SSH key, the gh login and the signing key, while the PHP side runs
+# wherever `php` resolves. HEAD must be on origin/main here and in the
+# filter's checkout, since the manifest names both commits. The manifest is
+# signed by bin/sign with the key named by --key or SPAMFILTER_SIGNING_KEY,
+# and the signature and the signing certificate go up with the tables.
+# --dry-run does everything but the tag, the push and the release.
+# --no-build keeps the tables in dist/ and only redoes the rest, for a
+# release that failed after the build.
 
 set -euo pipefail
 
@@ -25,17 +28,24 @@ cd "$root"
 
 tag=''
 dry_run=0
+key=${SPAMFILTER_SIGNING_KEY:-}
 prepare_args=()
 for arg in "$@"; do
     case $arg in
         --dry-run) dry_run=1 ;;
         --no-build) prepare_args+=("$arg") ;;
+        --key=*) key=${arg#--key=} ;;
         --*) echo "Unknown option $arg" >&2; exit 2 ;;
         *) tag=$arg ;;
     esac
 done
 if [[ -z $tag ]]; then
-    echo "Usage: bin/release v<hash-version>.<n> [--dry-run] [--no-build]" >&2
+    echo "Usage: bin/release v<hash-version>.<n> [--key=<path>] [--dry-run] [--no-build]" >&2
+    exit 2
+fi
+# Checked before the build, which takes an hour, not after
+if [[ -z $key || ! -r $key ]]; then
+    echo "release: no readable signing key, pass --key=<path> or set SPAMFILTER_SIGNING_KEY" >&2
     exit 2
 fi
 
@@ -57,7 +67,11 @@ if (( ! dry_run )) && ! gh auth status >/dev/null 2>&1; then
 fi
 
 php bin/prepare-release "$tag" "${prepare_args[@]}"
+echo
+echo "== signature"
+bin/sign --key="$key" dist/manifest.json
 mapfile -t assets < dist/release-assets.txt
+assets+=(dist/manifest.json.sig signing/spamfilter-backgrounds.crt)
 
 if (( dry_run )); then
     echo "Dry run: not tagging, not pushing, not releasing."
